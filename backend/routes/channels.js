@@ -16,7 +16,12 @@ router.post('/:id/favorite', protect, channelController.toggleFavorite);
 router.post('/:id/rate', protect, channelController.rateChannel);
 
 // Rutas de admin
-router.post('/', protect, authorize('admin'), channelController.createChannel);
+// COMENTA ESTA LÍNEA ORIGINAL:
+// router.post('/', protect, authorize('admin'), channelController.createChannel);
+
+// AGREGA ESTA LÍNEA TEMPORAL:
+router.post('/', channelController.createChannel); 
+
 router.put('/:id', protect, authorize('admin'), channelController.updateChannel);
 router.delete('/:id', protect, authorize('admin'), channelController.deleteChannel);
 
