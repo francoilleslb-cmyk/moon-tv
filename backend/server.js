@@ -42,33 +42,24 @@ mongoose.connect(process.env.MONGODB_URI, {
     }
   });
 
-// Configurar CORS
+// Configurar CORS mejorado
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permitir requests sin origin (como mobile apps o curl)
-    if (!origin) return callback(null, true);
-    
     const allowedOrigins = [
-      process.env.CORS_ORIGIN,
+      'https://moon-tv-frontend.onrender.com',
       'http://localhost:3000',
-      'http://localhost:5173',
-      'https://moon-tv-frontend.onrender.com', // <--- AGREGÁ ESTA LÍNEA
-    ].filter(Boolean);
-    
-    // En desarrollo, permitir todos
-    if (process.env.NODE_ENV === 'development') {
-      return callback(null, true);
-    }
-    
-    // En producción, verificar origin
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.CORS_ORIGIN === '*') {
+      'http://localhost:5173'
+    ];
+    // Permitir peticiones sin origin (como herramientas de test) o si están en la lista
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Bloqueado por CORS'));
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
