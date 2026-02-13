@@ -52,6 +52,7 @@ const corsOptions = {
       process.env.CORS_ORIGIN,
       'http://localhost:3000',
       'http://localhost:5173',
+      'https://moon-tv-frontend.onrender.com', // <--- AGREGÁ ESTA LÍNEA
     ].filter(Boolean);
     
     // En desarrollo, permitir todos
