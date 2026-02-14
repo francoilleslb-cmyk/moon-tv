@@ -20,21 +20,30 @@ const BROKEN_CHANNELS = [
     'FX  HD'
 ];
 
-// ENDPOINT TEMPORAL - Eliminar después de usarlo
-router.delete('/cleanup-broken', async (req, res) => {
+// ENDPOINT TEMPORAL - Eliminar por lista
+router.post('/delete-list', async (req, res) => {
     try {
+        const { channels } = req.body;
+
+        if (!channels || !Array.isArray(channels) || channels.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Se requiere una lista de canales en el body: { channels: ["Nombre1", "Nombre2"] }'
+            });
+        }
+
         // Contar cuántos canales hay en total
         const totalCount = await Channel.countDocuments();
 
-        // Buscar los canales rotos
-        const brokenChannelsInDb = await Channel.find({
-            name: { $in: BROKEN_CHANNELS }
+        // Buscar los canales a eliminar
+        const channelsInDb = await Channel.find({
+            name: { $in: channels }
         });
 
-        if (brokenChannelsInDb.length === 0) {
+        if (channelsInDb.length === 0) {
             return res.json({
                 success: true,
-                message: 'No se encontraron canales rotos para eliminar',
+                message: 'No se encontraron canales para eliminar',
                 totalBefore: totalCount,
                 totalAfter: totalCount,
                 deletedCount: 0
@@ -43,7 +52,7 @@ router.delete('/cleanup-broken', async (req, res) => {
 
         // Eliminar los canales
         const result = await Channel.deleteMany({
-            name: { $in: BROKEN_CHANNELS }
+            name: { $in: channels }
         });
 
         // Verificar el nuevo total
@@ -51,11 +60,11 @@ router.delete('/cleanup-broken', async (req, res) => {
 
         res.json({
             success: true,
-            message: `Eliminados ${result.deletedCount} canales rotos exitosamente`,
+            message: `Eliminados ${result.deletedCount} canales exitosamente`,
             totalBefore: totalCount,
             totalAfter: newTotalCount,
             deletedCount: result.deletedCount,
-            deletedChannels: brokenChannelsInDb.map(c => c.name)
+            deletedChannels: channelsInDb.map(c => c.name)
         });
 
     } catch (error) {
