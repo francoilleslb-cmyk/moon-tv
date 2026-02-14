@@ -1,5 +1,7 @@
 const express = require('express');
 const Channel = require('../models/Channel');
+const Movie = require('../models/Movie');
+const Series = require('../models/Series');
 
 const router = express.Router();
 
@@ -19,6 +21,34 @@ const BROKEN_CHANNELS = [
     'FX',
     'FX  HD'
 ];
+
+// ENDPOINT TEMPORAL - Eliminar todo excepto whitelist
+router.post('/clear-all', async (req, res) => {
+    try {
+        const { whitelist = [] } = req.body; // Array of channel names to KEEP
+
+        // 1. Delete Channels (except whitelist)
+        const channelResult = await Channel.deleteMany({ name: { $nin: whitelist } });
+
+        // 2. Delete All Movies
+        const movieResult = await Movie.deleteMany({});
+
+        // 3. Delete All Series
+        const seriesResult = await Series.deleteMany({});
+
+        res.json({
+            success: true,
+            message: 'Database cleared successfully',
+            deleted: {
+                channels: channelResult.deletedCount,
+                movies: movieResult.deletedCount,
+                series: seriesResult.deletedCount
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
 
 // ENDPOINT TEMPORAL - Eliminar por lista
 router.post('/delete-list', async (req, res) => {
