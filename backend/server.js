@@ -12,6 +12,7 @@ const channelRoutes = require('./routes/channels');
 const movieRoutes = require('./routes/movies');
 const seriesRoutes = require('./routes/series');
 const userRoutes = require('./routes/users');
+const cleanupRoutes = require('./routes/cleanup'); // TEMPORAL - Eliminar después
 
 const app = express();
 
@@ -126,21 +127,22 @@ app.use('/api/channels', channelRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/series', seriesRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/cleanup', cleanupRoutes); // TEMPORAL - Eliminar después
 
 // Manejo de errores
 app.use((err, req, res, next) => {
   console.error('❌ Error:', err.message);
-  
+
   // No mostrar stack trace en producción
   const errorResponse = {
     success: false,
     message: err.message || 'Error interno del servidor'
   };
-  
+
   if (process.env.NODE_ENV === 'development') {
     errorResponse.stack = err.stack;
   }
-  
+
   res.status(err.status || 500).json(errorResponse);
 });
 

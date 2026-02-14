@@ -20,9 +20,14 @@ router.post('/:id/rate', protect, channelController.rateChannel);
 // router.post('/', protect, authorize('admin'), channelController.createChannel);
 
 // AGREGA ESTA LÍNEA TEMPORAL:
-router.post('/', channelController.createChannel); 
+router.post('/', channelController.createChannel);
 
 router.put('/:id', protect, authorize('admin'), channelController.updateChannel);
-router.delete('/:id', protect, authorize('admin'), channelController.deleteChannel);
+
+// COMENTA ESTA LÍNEA ORIGINAL:
+// router.delete('/:id', protect, authorize('admin'), channelController.deleteChannel);
+
+// AGREGA ESTA LÍNEA TEMPORAL:
+router.delete('/:id', channelController.deleteChannel);
 
 module.exports = router;
