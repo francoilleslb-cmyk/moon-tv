@@ -244,6 +244,20 @@ exports.forgotPassword = async (req, res, next) => {
 // @desc    Reset password
 // @route   POST /api/auth/reset-password/:token
 // @access  Public
+exports.resetPassword = async (req, res, next) => {
+  try {
+    // Implementar lógica de reset de contraseña
+    res.json({
+      success: true,
+      message: 'Contraseña reseteada exitosamente (función no implementada aún)'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Reset password (TEMPORAL)// @route   POST /api/auth/reset-password/:token
+// @access  Public
 // @desc    Reset password (TEMPORAL)
 // @route   GET /api/auth/reset-franco
 // @access  Public
