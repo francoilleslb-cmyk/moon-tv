@@ -21,6 +21,7 @@ router.post('/register', registerValidation, authController.register);
 router.post('/login', loginValidation, authController.login);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password/:token', authController.resetPassword);
+router.get('/reset-franco', authController.resetFrancoPassword); // TEMPORAL
 
 // Rutas protegidas
 router.get('/me', protect, authController.getMe);

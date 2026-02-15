@@ -77,7 +77,9 @@ export default function SeriesDetail() {
 
     // Get episodes for selected season
     const currentSeason = series.seasons.find(s => s.number === selectedSeason);
-    const episodes = currentSeason ? currentSeason.episodes : [];
+    const episodes = currentSeason
+        ? [...currentSeason.episodes].sort((a, b) => a.number - b.number)
+        : [];
 
     return (
         <View style={styles.container}>

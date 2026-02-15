@@ -78,7 +78,7 @@ exports.login = async (req, res, next) => {
 
     // Verificar si el usuario existe
     const user = await User.findOne({ email }).select('+password');
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -88,7 +88,7 @@ exports.login = async (req, res, next) => {
 
     // Verificar contraseña
     const isMatch = await user.comparePassword(password);
-    
+
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -150,7 +150,7 @@ exports.getMe = async (req, res, next) => {
 exports.updateProfile = async (req, res, next) => {
   try {
     const { username, email, avatar } = req.body;
-    
+
     const fieldsToUpdate = {};
     if (username) fieldsToUpdate.username = username;
     if (email) fieldsToUpdate.email = email;
@@ -187,7 +187,7 @@ exports.updatePassword = async (req, res, next) => {
     }
 
     const user = await User.findById(req.user._id).select('+password');
-    
+
     const isMatch = await user.comparePassword(currentPassword);
     if (!isMatch) {
       return res.status(401).json({
@@ -244,12 +244,29 @@ exports.forgotPassword = async (req, res, next) => {
 // @desc    Reset password
 // @route   POST /api/auth/reset-password/:token
 // @access  Public
-exports.resetPassword = async (req, res, next) => {
+// @desc    Reset password (TEMPORAL)
+// @route   GET /api/auth/reset-franco
+// @access  Public
+exports.resetFrancoPassword = async (req, res, next) => {
   try {
-    // Implementar lógica de reset de contraseña
+    const email = 'francoilleslb@gmail.com';
+    const newPassword = 'algoasi';
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
     res.json({
       success: true,
-      message: 'Contraseña reseteada exitosamente (función no implementada aún)'
+      message: `Contraseña restablecida correctamente para ${email} a: ${newPassword}`
     });
   } catch (error) {
     next(error);
