@@ -13,6 +13,7 @@ const movieRoutes = require('./routes/movies');
 const seriesRoutes = require('./routes/series');
 const userRoutes = require('./routes/users');
 const cleanupRoutes = require('./routes/cleanup'); // TEMPORAL - Eliminar después
+console.log('Rutas de limpieza cargadas');
 
 const app = express();
 
